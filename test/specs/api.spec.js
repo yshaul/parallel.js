@@ -242,6 +242,31 @@
 				expect(result).toEqual([26, 27, 28]);
 			});
 		});
+
+		it('should be able to require wihtout an evalPath (non-IE)', function () {
+			var p = new Parallel([1, 2, 3]);
+			p.require('test/test.js'); // relative to current location (no eval path)
+
+			var done = false;
+			var result = null;
+
+			runs(function () {
+				p.map(function (el) {
+					return myCalc(el, 25);
+				}).then(function (data) {
+					result = data;
+					done = true;
+				});
+			});
+
+			waitsFor(function () {
+				return done;
+			}, "it should finish", 500);
+
+			runs(function () {
+				expect(result).toEqual([26, 27, 28]);
+			});
+		});
 	}
 
 	it('should work with require()d anonymous functions', function () {
